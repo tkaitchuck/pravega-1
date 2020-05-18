@@ -13,10 +13,10 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import io.pravega.auth.InvalidTokenException;
 import io.pravega.auth.TokenExpiredException;
-import io.pravega.client.netty.impl.ConnectionFactory;
+import io.pravega.client.connection.impl.ClientConnection;
+import io.pravega.client.connection.impl.TcpClientConnection;
+import io.pravega.client.connection.impl.ConnectionFactory;
 import io.pravega.client.netty.impl.Flow;
-import io.pravega.client.nonetty.impl.ClientConnection;
-import io.pravega.client.nonetty.impl.TcpClientConnection;
 import io.pravega.client.security.auth.DelegationTokenProvider;
 import io.pravega.client.stream.impl.Controller;
 import io.pravega.client.stream.impl.PendingEvent;
@@ -635,7 +635,7 @@ class SegmentOutputStreamImpl implements SegmentOutputStream {
         // } else {
         // return connectionFactory.establishConnection(uri, responseProcessor);
         // }
-        return CompletableFuture.completedFuture(new TcpClientConnection(uri.getEndpoint(), uri.getPort(), responseProcessor));
+        return this.connectionFactory.establishConnection(uri, responseProcessor);
     }
 
     /**

@@ -7,7 +7,7 @@
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  */
-package io.pravega.client.netty.impl;
+package io.pravega.client.connection.impl;
 
 import io.pravega.common.ExponentialMovingAverage;
 import io.pravega.common.MathHelpers;
@@ -31,9 +31,9 @@ public class AppendBatchSizeTrackerImpl implements AppendBatchSizeTracker {
     private static final int MAX_BATCH_TIME_MILLIS = 20;
     private static final double NANOS_PER_MILLI = 1000000;
     
-    private static final int BASE_TIME_NANOS = 666000;
-    private static final int BASE_SIZE = 10 * 1024;
-    private static final double OUTSTANDING_FRACTION = 0.6;
+    private static final int BASE_TIME_NANOS = 0;
+    private static final int BASE_SIZE = 0;
+    private static final double OUTSTANDING_FRACTION = 0.5;
     
     private final Supplier<Long> clock;
     private final AtomicLong lastAppendNumber;
@@ -78,7 +78,7 @@ public class AppendBatchSizeTrackerImpl implements AppendBatchSizeTracker {
             return 0;
         }
         double appendsInTime = Math.max(1.0, BASE_TIME_NANOS / nanosBetweenAppends.getCurrentValue());
-        double appendsInBatch = appendsOutstanding.getCurrentValue() * OUTSTANDING_FRACTION + appendsInTime;
+        double appendsInBatch = (appendsOutstanding.getCurrentValue() * OUTSTANDING_FRACTION + appendsInTime);
         int size = (int) (appendsInBatch * eventSize.getCurrentValue()) + BASE_SIZE;
         return MathHelpers.minMax(size, 0, MAX_BATCH_SIZE);
     }

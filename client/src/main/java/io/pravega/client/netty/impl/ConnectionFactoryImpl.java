@@ -73,6 +73,11 @@ public final class ConnectionFactoryImpl implements ConnectionFactory {
     }
 
     @Override
+    public io.pravega.client.connection.impl.ConnectionFactory convert() {
+        return new io.pravega.client.connection.impl.SocketConnectionFactoryImpl(this.clientConfig, this.executor);
+    }
+
+    @Override
     public void close() {
         log.info("Shutting down connection factory");
         if (closed.compareAndSet(false, true)) {
